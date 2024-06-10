@@ -1,6 +1,8 @@
 package br.com.lucas.services;
 
+import br.com.lucas.data.vo.v1.PersonVO;
 import br.com.lucas.exceptions.ResourceNotFoundException;
+import br.com.lucas.mapper.DozerMapper;
 import br.com.lucas.model.Person;
 import br.com.lucas.repositories.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,22 +19,25 @@ public class PersonServices {
     @Autowired
     PersonRepository repository;
 
-    public List<Person> findAll() {
-        return repository.findAll();
+    public List<PersonVO> findAll() {
+//        return repository.findAll();
+        return DozerMapper.parseListsObjects(repository.findAll(), PersonVO.class);
     }
 
-    public Person findById(Long id) {
-        return repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("no record"));
+    public PersonVO findById(Long id) {
+        logger.info("finding one person!");
+        var entity = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("no record"));
+        return DozerMapper.parseObject(entity,PersonVO.class);
     }
 
-    public Person create(Person person) {
-
+    public PersonVO create(PersonVO person) {
         logger.info("Creating one person!");
-
-        return repository.save(person);
+        var entity = DozerMapper.parseObject(person, Person.class);
+        var vo = DozerMapper.parseObject(repository.save(entity), PersonVO.class);
+        return vo;
     }
 
-    public Person update(Person person) {
+    public PersonVO update(PersonVO person) {
 
         logger.info("Updating one person!");
 
@@ -44,7 +49,8 @@ public class PersonServices {
         entity.setAddress(person.getAddress());
         entity.setGender(person.getGender());
 
-        return repository.save(person);
+        var vo = DozerMapper.parseObject(repository.save(entity), PersonVO.class);
+        return vo;
     }
 
     public void delete(Long id) {
