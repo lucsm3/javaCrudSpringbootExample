@@ -1,8 +1,10 @@
 package br.com.lucas.services;
 
 import br.com.lucas.data.vo.v1.PersonVO;
+import br.com.lucas.data.vo.v2.PersonVOV2;
 import br.com.lucas.exceptions.ResourceNotFoundException;
 import br.com.lucas.mapper.DozerMapper;
+import br.com.lucas.mapper.custom.PersonMapper;
 import br.com.lucas.model.Person;
 import br.com.lucas.repositories.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +20,8 @@ public class PersonServices {
 
     @Autowired
     PersonRepository repository;
+    @Autowired
+    PersonMapper mapper;
 
     public List<PersonVO> findAll() {
 //        return repository.findAll();
@@ -34,6 +38,13 @@ public class PersonServices {
         logger.info("Creating one person!");
         var entity = DozerMapper.parseObject(person, Person.class);
         var vo = DozerMapper.parseObject(repository.save(entity), PersonVO.class);
+        return vo;
+    }
+
+    public PersonVOV2 createv2(PersonVOV2 person) {
+        logger.info("Creating one person with v2!");
+        var entity = mapper.convertVoToEntity(person);
+        var vo =  mapper.convertEntityToVo(repository.save(entity));
         return vo;
     }
 
