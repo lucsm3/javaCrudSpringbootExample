@@ -1,28 +1,30 @@
 package br.com.lucas.data.vo.v1;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.github.dozermapper.core.Mapping;
+import org.springframework.hateoas.RepresentationModel;
 
 import java.io.Serializable;
 import java.util.Objects;
-@JsonPropertyOrder({"id,adress,first_name,lastName,address,gender"})
-public class PersonVO implements Serializable {
+@JsonPropertyOrder({"id", "firstName", "lastName", "address", "gender"})
+public class PersonVO extends RepresentationModel<PersonVO> implements Serializable {
     private static final long serialVersionUID = 1L;
-    private Long id;
-    @JsonProperty("first_name")
+    @JsonProperty("id")
+    @Mapping("id")
+    private Long key;
     private String firstName;
     private String lastName;
     private String address;
-    @JsonIgnore
     private String gender;
 
-    public Long getId() {
-        return id;
+    public Long getKey() {
+        return key;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setKey(Long key) {
+        this.key = key;
     }
 
     public String getFirstName() {
@@ -63,12 +65,12 @@ public class PersonVO implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         PersonVO person = (PersonVO) o;
-        return Objects.equals(id, person.id) && Objects.equals(firstName, person.firstName) && Objects.equals(lastName, person.lastName) && Objects.equals(address, person.address) && Objects.equals(gender, person.gender);
+        return Objects.equals(key, person.key) && Objects.equals(firstName, person.firstName) && Objects.equals(lastName, person.lastName) && Objects.equals(address, person.address) && Objects.equals(gender, person.gender);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, firstName, lastName, address, gender);
+        return Objects.hash(key, firstName, lastName, address, gender);
     }
 
     public PersonVO() {
