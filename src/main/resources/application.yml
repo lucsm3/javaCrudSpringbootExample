@@ -10,3 +10,7 @@ spring:
     username: postgres
     password: root123
     driverClassName: org.postgresql.Driver
+springdoc:
+  pathsToMatch: /api/**/v1/**
+  swagger-ui:
+    use-root-path: true
